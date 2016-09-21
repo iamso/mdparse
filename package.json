@@ -1,0 +1,28 @@
+{
+  "name": "mdparse",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Steve Ottoz <so@dev.so>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "connect-multiparty": "^2.0.0",
+    "ejs": "^2.5.2",
+    "emojione": "^2.2.6",
+    "express": "^4.14.0",
+    "highlight.js": "^9.7.0",
+    "lodash": "^4.16.1",
+    "marked": "^0.3.6",
+    "moment": "^2.15.1",
+    "morgan": "^1.7.0",
+    "nedb": "^1.8.0",
+    "request-ip": "^1.2.2",
+    "sha512": "0.0.1",
+    "ujs": "^0.33.0",
+    "xss": "^0.2.13"
+  }
+}
