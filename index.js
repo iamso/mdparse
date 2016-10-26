@@ -8,8 +8,6 @@
   const morgan     = require('morgan');
   const port       = process.env.PORT || 8808;
 
-  const marked     = require('./lib/marked');
-
   const api1       = require('./lib/routes/v1');
 
   // app.use(morgan('combined'));
