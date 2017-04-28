@@ -17,8 +17,7 @@
   app.use(bodyParser.text({ type: 'text/plain' }));
   app.use(multipart());
 
-  // app.use('/v1', api1);
-  app.use('/*', api1);
+  app.use('/v1', api1);
 
   app.use((req, res, next) => {
     if (process.env.REDIRECT) {
