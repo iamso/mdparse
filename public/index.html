@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Markdown</title>
+  <link rel="stylesheet" href="/assets/css/lumen.min.css">
+  <link rel="stylesheet" href="/assets/css/tomorrow-night-eighties.css">
+  <style>
+    html,
+    body {
+      box-sizing: border-box;
+      height: 100%;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-content: stretch;
+      align-items: stretch;
+      height: 100%;
+    }
+    .header {
+
+    }
+    .navbar {
+      margin: 0;
+      padding: 1rem;
+    }
+    .main {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-content: stretch;
+      align-items: stretch;
+      flex: 1;
+    }
+
+    .md-input,
+    .md-output {
+      flex: 0 0 0;
+      max-width: 0;
+      max-height: 100%;
+      padding: 2rem 0;
+      transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .show-input .md-input,
+    .show-output .md-output {
+      flex: 1 0 100%;
+      max-width: 100%;
+    }
+    .show-both .md-input,
+    .show-both .md-output {
+      flex: 1 0 50%;
+      max-width: 50%;
+    }
+    .show-input .md-input,
+    .show-output .md-output,
+    .show-both .md-input,
+    .show-both .md-output {
+      padding: 2rem;
+    }
+
+    .md-input {
+      background: #eee;
+      border: 0;
+      color: #999;
+      font-family: monaco, Consolas, "Lucida Console", monospace;
+      font-size: 1.6rem;
+      outline: 0;
+      resize: none;
+    }
+    .md-output {
+      overflow: auto;
+    }
+    .md-output img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .hide-mobile {
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .hide-mobile {
+        display: initial;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <header class="header">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid text-center">
+        <div class="btn-group" data-toggle="buttons">
+          <label class="btn btn-default">
+            <input type="radio" name="view" value="input" autocomplete="off"> input
+          </label>
+          <label class="btn btn-default hide-mobile">
+            <input type="radio" name="view" value="both" autocomplete="off"> both
+          </label>
+          <label class="btn btn-default">
+            <input type="radio" name="view" value="output" autocomplete="off"> output
+          </label>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="main">
+    <textarea class="md-input" id="input"></textarea>
+    <div class="md-output" id="output"></div>
+  </main>
+
+  <script>
+    !!window.Promise || document.write('<script src="/assets/js/promise.min.js"><\/script>');
+  </script>
+  <script src="/assets/js/http.min.js"></script>
+  <script src="/assets/js/behave.min.js"></script>
+  <script>
+    (function(window, document, undefined) {
+      var api = http('/v1');
+      var isMac = /(Mac)/gi.test(navigator.platform);
+      var isWin = /(Win)/gi.test(navigator.platform);
+      var body = document.querySelector('body');
+      var input = document.querySelector('#input');
+      var output = document.querySelector('#output');
+      var view = [].slice.call(document.querySelectorAll('input[name="view"]'), 0);
+      var editor = new Behave({
+        textarea: input,
+        replaceTab: true,
+        softTabs: true,
+        tabSize: 2,
+        autoOpen: true,
+        overwrite: true,
+        autoStrip: true,
+        autoIndent: true,
+        continueList: true,
+        fence: false
+      });
+
+      BehaveHooks.add(['keydown'], function(data, e) {
+        var lines = data.editor.text.split(/\n/);
+        var line = data.lines.current - 1;
+        var curPos = data.caret.pos;
+        var newPos = curPos;
+        var tempCur;
+        var tempNew;
+        if (e.ctrlKey && ((isMac && e.metaKey) || (isWin && e.shiftKey)) && [38,40].indexOf(e.keyCode) >= 0) {
+          if (e.keyCode === 38) { // up
+            if (data.lines.current === 1) {
+              return;
+            }
+            tempCur = lines[line];
+            tempNew = lines[line - 1];
+            lines[line] = tempNew;
+            lines[line - 1] = tempCur;
+            newPos = curPos - tempNew.length - 1; // -1 for the missing newline
+          }
+          else if (e.keyCode === 40) { // down
+            if (data.lines.current === data.lines.total) {
+              return;
+            }
+            tempCur = lines[line];
+            tempNew = lines[line + 1];
+            lines[line] = tempNew;
+            lines[line + 1] = tempCur;
+            newPos = curPos + tempNew.length + 1; // +1 for the missing newline
+          }
+          editor.editor.set(lines.join('\n'));
+          editor.cursor.set(newPos, newPos);
+        }
+      });
+      BehaveHooks.add(['enter:after', 'delete:after', 'tab:after', 'keydown', 'input'], function() {
+        updateMarkdown();
+      });
+
+      input.addEventListener('input', updateMarkdown);
+      input.addEventListener('input', syncScroll);
+      input.addEventListener('scroll', syncScroll);
+
+      view.forEach(function(item, i) {
+        item.addEventListener('change', viewChange);
+      });
+
+      window.addEventListener('resize', updateView);
+
+      window.addEventListener('keydown', function(e) {
+        if (e.keyCode === 83 && (e.metaKey || e.ctrlKey)) {
+          e.preventDefault();
+          downloadFile();
+          return false;
+        }
+      });
+
+      function updateMarkdown() {
+        api.post({md: input.value}).then(html => {
+          output.innerHTML = html;
+          syncScroll();
+        });
+      }
+
+      function viewChange() {
+        view.forEach(function(item, i) {
+          if (item.checked) {
+            body.className = 'show-' + item.value;
+            item.parentNode.classList.add('active');
+          }
+          else {
+            item.parentNode.classList.remove('active');
+          }
+        });
+      }
+
+      function updateView() {
+        var checked = view.filter(function(item) { return item.checked; })[0];
+        var isMobile = window.innerWidth < 768;
+        var newView = checked ? checked.value : '';
+        if (isMobile) {
+          if ((checked && checked.value === 'both') || !checked) {
+            newView = 'input'
+          }
+        }
+        else if (!checked) {
+          newView = 'both';
+        }
+        view.filter(function(item) { return item.value === newView; })[0].checked = true;
+        viewChange();
+
+      }
+
+      function syncScroll() {
+        var max = input.scrollHeight - input.clientHeight;
+        var cur = input.scrollTop;
+        var per = cur / max;
+        output.scrollTop = (output.scrollHeight - output.clientHeight) * per;
+      }
+
+      function downloadFile() {
+        var link = document.createElement('a');
+        link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(input.value));
+        link.setAttribute('download', 'input.md');
+        link.style.display = 'none';
+        body.appendChild(link);
+        link.click();
+        body.removeChild(link);
+      }
+
+      function initContent() {
+        http('/default.md').get().then(function(data) {
+          console.log(data);
+          input.value = data;
+          updateMarkdown();
+        });
+      }
+
+      initContent();
+      updateView();
+    })(window, document);
+  </script>
+</body>
+</html>
