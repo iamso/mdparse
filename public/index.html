@@ -200,6 +200,11 @@
           downloadFile();
           return false;
         }
+        if (e.keyCode === 78 && (e.metaKey || e.ctrlKey)) {
+          e.preventDefault();
+          clearContent();
+          return false;
+        }
       });
 
       function updateMarkdown() {
@@ -297,6 +302,13 @@
           input.value = data;
           updateMarkdown();
         });
+      }
+
+      function clearContent() {
+        input.value = '';
+        input.focus();
+        updateMarkdown();
+        filename = 'input.md';
       }
 
       initContent();
