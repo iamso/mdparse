@@ -126,10 +126,12 @@
       var api = http('/v1');
       var isMac = /(Mac)/gi.test(navigator.platform);
       var isWin = /(Win)/gi.test(navigator.platform);
+      var html = document.querySelector('html');
       var body = document.querySelector('body');
       var input = document.querySelector('#input');
       var output = document.querySelector('#output');
       var view = [].slice.call(document.querySelectorAll('input[name="view"]'), 0);
+      var filename = 'input.md';
       var editor = new Behave({
         textarea: input,
         replaceTab: true,
@@ -188,6 +190,9 @@
       });
 
       window.addEventListener('resize', updateView);
+      window.addEventListener('dragover', overHandler);
+      window.addEventListener('dragleave', leaveHandler);
+      window.addEventListener('drop', dropHandler);
 
       window.addEventListener('keydown', function(e) {
         if (e.keyCode === 83 && (e.metaKey || e.ctrlKey)) {
@@ -230,7 +235,6 @@
         }
         view.filter(function(item) { return item.value === newView; })[0].checked = true;
         viewChange();
-
       }
 
       function syncScroll() {
@@ -240,10 +244,48 @@
         output.scrollTop = (output.scrollHeight - output.clientHeight) * per;
       }
 
+      function overHandler(e) {
+        e.preventDefault();
+        html.classList.add('drag-over');
+      }
+
+      function leaveHandler(e) {
+        e.preventDefault();
+        if (e.pageX > 0 || e.pageY > 0) {
+          return false;
+        }
+        html.classList.remove('drag-over');
+      }
+
+      function dropHandler(e) {
+        e.preventDefault();
+        html.classList.remove('drag-over');
+        if (window.File && window.FileReader && window.FileList) {
+          var files = e.target.files || e.dataTransfer.files;
+          var text = e.dataTransfer.getData('text');
+          if (files) {
+            var file = files[0];
+            var r = new FileReader();
+            r.onload = function(e) {
+              filename = file.name;
+              input.value = e.target.result;
+              updateMarkdown();
+            };
+            if (file && file.type.match(/^text\//)) {
+              r.readAsText(file);
+            }
+          }
+          else if (text) {
+            input.value = text;
+            updateMarkdown();
+          }
+        }
+      }
+
       function downloadFile() {
         var link = document.createElement('a');
         link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(input.value));
-        link.setAttribute('download', 'input.md');
+        link.setAttribute('download', filename);
         link.style.display = 'none';
         body.appendChild(link);
         link.click();
@@ -252,7 +294,6 @@
 
       function initContent() {
         http('/default.md').get().then(function(data) {
-          console.log(data);
           input.value = data;
           updateMarkdown();
         });
