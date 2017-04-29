@@ -33,14 +33,18 @@
   color: #cc99cc;
 }
 
-pre {
+pre,
+code {
   background: #2d2d2d;
   border: 0;
+  color: #cccccc;
+}
+code {
+  display: inline-block;
 }
 pre code {
   border: 0 !important;
   display: block;
-  color: #cccccc;
   font-family: Menlo, Monaco, Consolas, monospace;
   line-height: 1.5;
   border: 1px solid #ccc;
