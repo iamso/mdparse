@@ -10,7 +10,9 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "compression": "^1.6.2",
     "connect-multiparty": "^2.0.0",
+    "cors": "^2.8.3",
     "ejs": "^2.5.2",
     "emojione": "^2.2.6",
     "express": "^4.14.0",
@@ -50,6 +52,7 @@
     "markdown-it-video": "^0.4.0",
     "marked": "^0.3.6",
     "moment": "^2.15.1",
+    "helmet": "^3.5.0",
     "morgan": "^1.7.0",
     "sha512": "0.0.1",
     "ujs": "^0.33.0",

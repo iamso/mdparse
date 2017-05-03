@@ -6,6 +6,9 @@
   const bodyParser = require('body-parser');
   const multipart  = require('connect-multiparty');
   const morgan     = require('morgan');
+  const compress   = require('compression');
+  const cors       = require('cors');
+  const helmet     = require('helmet');
   const port       = process.env.PORT || 8808;
 
   const api1       = require('./lib/routes/v1');
@@ -16,6 +19,9 @@
   app.use(bodyParser.json());
   app.use(bodyParser.text({ type: 'text/plain' }));
   app.use(multipart());
+  app.use(cors());
+  app.use(helmet());
+  app.use(compress());
 
   app.use('/v1', api1);
 
