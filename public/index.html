@@ -120,7 +120,7 @@
     !!window.Promise || document.write('<script src="/assets/js/promise.min.js"><\/script>');
   </script>
   <script src="/assets/js/http.min.js"></script>
-  <script src="/assets/js/behave.min.js"></script>
+  <script src="/assets/js/editrrr.min.js"></script>
   <script>
     (function(window, document, undefined) {
       var api = http('/v1');
@@ -132,7 +132,7 @@
       var output = document.querySelector('#output');
       var view = [].slice.call(document.querySelectorAll('input[name="view"]'), 0);
       var filename = 'input.md';
-      var editor = new Behave({
+      var editor = new Editrrr({
         textarea: input,
         replaceTab: true,
         softTabs: true,
@@ -142,48 +142,17 @@
         autoStrip: true,
         autoIndent: true,
         continueList: true,
-        fence: false
+        moveLine: true,
+        duplicateLine: true,
       });
 
-      BehaveHooks.add(['keydown'], function(data, e) {
-        var lines = data.editor.text.split(/\n/);
-        var line = data.lines.current - 1;
-        var curPos = data.caret.pos;
-        var newPos = curPos;
-        var tempCur;
-        var tempNew;
-        if (e.ctrlKey && ((isMac && e.metaKey) || (isWin && e.shiftKey)) && [38,40].indexOf(e.keyCode) >= 0) {
-          if (e.keyCode === 38) { // up
-            if (data.lines.current === 1) {
-              return;
-            }
-            tempCur = lines[line];
-            tempNew = lines[line - 1];
-            lines[line] = tempNew;
-            lines[line - 1] = tempCur;
-            newPos = curPos - tempNew.length - 1; // -1 for the missing newline
-          }
-          else if (e.keyCode === 40) { // down
-            if (data.lines.current === data.lines.total) {
-              return;
-            }
-            tempCur = lines[line];
-            tempNew = lines[line + 1];
-            lines[line] = tempNew;
-            lines[line + 1] = tempCur;
-            newPos = curPos + tempNew.length + 1; // +1 for the missing newline
-          }
-          editor.editor.set(lines.join('\n'));
-          editor.cursor.set(newPos, newPos);
-        }
-      });
-      BehaveHooks.add(['enter:after', 'delete:after', 'tab:after', 'keydown', 'input'], function() {
-        updateMarkdown();
-      });
 
-      input.addEventListener('input', updateMarkdown);
-      input.addEventListener('input', syncScroll);
-      input.addEventListener('scroll', syncScroll);
+
+      editor.addEvent('keydown', updateMarkdown);
+      editor.addEvent('keydown', syncScroll);
+      editor.addEvent('input', updateMarkdown);
+      editor.addEvent('input', syncScroll);
+      editor.addEvent('scroll', syncScroll);
 
       view.forEach(function(item, i) {
         item.addEventListener('change', viewChange);
@@ -208,7 +177,7 @@
       });
 
       function updateMarkdown() {
-        api.post({md: input.value}).then(html => {
+        api.post({md: editor.value}).then(html => {
           output.innerHTML = html;
           syncScroll();
         });
