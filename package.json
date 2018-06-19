@@ -9,14 +9,14 @@
   "author": "Steve Ottoz <so@dev.so>",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.15.2",
-    "compression": "^1.6.2",
-    "connect-multiparty": "^2.0.0",
-    "cors": "^2.8.3",
-    "ejs": "^2.5.2",
-    "express": "^4.14.0",
-    "helmet": "^3.5.0",
-    "morgan": "^1.7.0",
-    "motes-md": "^0.5.0"
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.2",
+    "connect-multiparty": "^2.1.0",
+    "cors": "^2.8.4",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "helmet": "^3.12.1",
+    "morgan": "^1.9.0",
+    "motes-md": "^0.6.0"
   }
 }
