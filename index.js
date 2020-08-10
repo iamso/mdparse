@@ -12,6 +12,7 @@
   const port       = process.env.PORT || 8808;
 
   const api1       = require('./lib/routes/v1');
+  const api2       = require('./lib/routes/v2');
 
   // app.use(morgan('combined'));
   app.use(express.static(`${__dirname}/public`));
@@ -24,6 +25,7 @@
   app.use(compress());
 
   app.use('/v1', api1);
+  app.use('/v2', api2);
 
   app.use((req, res, next) => {
     if (process.env.REDIRECT) {
