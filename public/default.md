@@ -36,7 +36,7 @@ __This is bold text__
 
 *This is italic text*
 
-_This is italic text_
+_This is underlined text_
 
 ~~Strikethrough~~
 
@@ -232,6 +232,6 @@ It converts "HTML", but keep intact partial entries like "xxxHTMLyyy" and so on.
 This is a **div** with the class `container`.
 :::
 
-::: custom section .custom-section #custon-section
+::: custom section .custom-section #custom-section
 This is a **section** with the class `custom-section` and the id `custom-section`.
 :::
