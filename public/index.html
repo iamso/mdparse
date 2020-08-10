@@ -23,9 +23,6 @@
       align-items: stretch;
       height: 100%;
     }
-    .header {
-
-    }
     .navbar {
       margin: 0;
       padding: 1rem;
@@ -117,14 +114,9 @@
     <div class="md-output" id="output"></div>
   </main>
 
-  <script>
-    !!window.Promise || document.write('<script src="/assets/js/promise.min.js"><\/script>');
-  </script>
-  <script src="/assets/js/http.min.js"></script>
-  <script src="/assets/js/editrrr.min.js"></script>
+    <script src="/assets/js/editrrr.min.js"></script>
   <script>
     (function(window, document, undefined) {
-      var api = http('/v1');
       var isMac = /(Mac)/gi.test(navigator.platform);
       var isWin = /(Win)/gi.test(navigator.platform);
       var html = document.querySelector('html');
@@ -165,12 +157,12 @@
       window.addEventListener('drop', dropHandler);
 
       window.addEventListener('keydown', function(e) {
-        if (e.keyCode === 83 && (e.metaKey || e.ctrlKey)) {
+        if (e.key === 's' && (e.metaKey || e.ctrlKey)) {
           e.preventDefault();
           downloadFile();
           return false;
         }
-        if (e.keyCode === 78 && (e.metaKey || e.ctrlKey)) {
+        if (e.key === 'n' && (e.metaKey || e.ctrlKey)) {
           e.preventDefault();
           clearContent();
           return false;
@@ -178,10 +170,30 @@
       });
 
       function updateMarkdown() {
-        api.post({md: editor.value}).then(html => {
-          output.innerHTML = html;
-          syncScroll();
-        });
+        fetch('/v2', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({md: editor.value}),
+        })
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            }
+            return Promise.reject();
+          })
+          .then(data => {
+            output.innerHTML = data.html;
+            printMeta(data.meta, 'meta');
+            printMeta(data.env, 'env');
+            console.info({
+              env: data.env,
+              meta: data.meta,
+            });
+            syncScroll();
+          })
+          .catch(error => {});
       }
 
       function viewChange() {
@@ -210,6 +222,19 @@
         }
         view.filter(function(item) { return item.value === newView; })[0].checked = true;
         viewChange();
+      }
+
+      function printMeta(data = {}, title = 'meta') {
+        if (!Object.keys(data).length) {
+          return;
+        }
+        const details = document.createElement('details');
+        const summary = document.createElement('summary');
+        const json = document.createElement('pre');
+        summary.textContent = title;
+        json.innerHTML = JSON.stringify(data, null, 2);
+        details.append(summary, json);
+        output.prepend(details);
       }
 
       function syncScroll() {
@@ -268,10 +293,13 @@
       }
 
       function initContent() {
-        http('/default.md').get().then(function(data) {
-          input.value = data;
-          updateMarkdown();
-        });
+        fetch('/default.md')
+          .then(response => response.text())
+          .then(text => {
+            input.value = text;
+            updateMarkdown();
+          })
+          .catch(error => {});
       }
 
       function clearContent() {
