@@ -1,0 +1,175 @@
+.md-output table {
+  border: 1px solid #eeeeee
+}
+
+.md-output table>thead>tr>th,
+.md-output table>tbody>tr>th,
+.md-output table>tfoot>tr>th,
+.md-output table>thead>tr>td,
+.md-output table>tbody>tr>td,
+.md-output table>tfoot>tr>td {
+  border: 1px solid #eeeeee
+}
+
+.md-output table>thead>tr>th,
+.md-output table>thead>tr>td {
+  border-bottom-width: 2px
+}
+
+@media print {
+  .md-output table {
+    border-collapse: collapse !important;
+
+  }
+
+  .md-output table td,
+  .md-output table th {
+    background-color: #fff !important
+  }
+
+  .md-output table th,
+  .md-output table td {
+    border: 1px solid #ddd !important
+  }
+}
+
+.md-output table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px
+}
+
+.md-output table>thead>tr>th,
+.md-output table>tbody>tr>th,
+.md-output table>tfoot>tr>th,
+.md-output table>thead>tr>td,
+.md-output table>tbody>tr>td,
+.md-output table>tfoot>tr>td {
+  padding: 8px;
+  line-height: 1.42857143;
+  vertical-align: top;
+  border-top: 1px solid #eeeeee
+}
+
+.md-output table>thead>tr>th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #eeeeee
+}
+
+.md-output table>caption+thead>tr:first-child>th,
+.md-output table>colgroup+thead>tr:first-child>th,
+.md-output table>thead:first-child>tr:first-child>th,
+.md-output table>caption+thead>tr:first-child>td,
+.md-output table>colgroup+thead>tr:first-child>td,
+.md-output table>thead:first-child>tr:first-child>td {
+  border-top: 0
+}
+
+.md-output table>tbody+tbody {
+  border-top: 2px solid #eeeeee
+}
+
+.md-output table table {
+  background-color: #ffffff
+}
+
+
+
+.md-output table>thead>tr>td.active,
+.md-output table>tbody>tr>td.active,
+.md-output table>tfoot>tr>td.active,
+.md-output table>thead>tr>th.active,
+.md-output table>tbody>tr>th.active,
+.md-output table>tfoot>tr>th.active,
+.md-output table>thead>tr.active>td,
+.md-output table>tbody>tr.active>td,
+.md-output table>tfoot>tr.active>td,
+.md-output table>thead>tr.active>th,
+.md-output table>tbody>tr.active>th,
+.md-output table>tfoot>tr.active>th {
+  background-color: #f5f5f5
+}
+
+
+.md-output table>thead>tr>td.success,
+.md-output table>tbody>tr>td.success,
+.md-output table>tfoot>tr>td.success,
+.md-output table>thead>tr>th.success,
+.md-output table>tbody>tr>th.success,
+.md-output table>tfoot>tr>th.success,
+.md-output table>thead>tr.success>td,
+.md-output table>tbody>tr.success>td,
+.md-output table>tfoot>tr.success>td,
+.md-output table>thead>tr.success>th,
+.md-output table>tbody>tr.success>th,
+.md-output table>tfoot>tr.success>th {
+  background-color: #28b62c
+}
+
+
+.md-output table>thead>tr>td.info,
+.md-output table>tbody>tr>td.info,
+.md-output table>tfoot>tr>td.info,
+.md-output table>thead>tr>th.info,
+.md-output table>tbody>tr>th.info,
+.md-output table>tfoot>tr>th.info,
+.md-output table>thead>tr.info>td,
+.md-output table>tbody>tr.info>td,
+.md-output table>tfoot>tr.info>td,
+.md-output table>thead>tr.info>th,
+.md-output table>tbody>tr.info>th,
+.md-output table>tfoot>tr.info>th {
+  background-color: #75caeb
+}
+
+.md-output table>thead>tr>td.warning,
+.md-output table>tbody>tr>td.warning,
+.md-output table>tfoot>tr>td.warning,
+.md-output table>thead>tr>th.warning,
+.md-output table>tbody>tr>th.warning,
+.md-output table>tfoot>tr>th.warning,
+.md-output table>thead>tr.warning>td,
+.md-output table>tbody>tr.warning>td,
+.md-output table>tfoot>tr.warning>td,
+.md-output table>thead>tr.warning>th,
+.md-output table>tbody>tr.warning>th,
+.md-output table>tfoot>tr.warning>th {
+  background-color: #ff851b
+}
+
+.md-output table>thead>tr>td.danger,
+.md-output table>tbody>tr>td.danger,
+.md-output table>tfoot>tr>td.danger,
+.md-output table>thead>tr>th.danger,
+.md-output table>tbody>tr>th.danger,
+.md-output table>tfoot>tr>th.danger,
+.md-output table>thead>tr.danger>td,
+.md-output table>tbody>tr.danger>td,
+.md-output table>tfoot>tr.danger>td,
+.md-output table>thead>tr.danger>th,
+.md-output table>tbody>tr.danger>th,
+.md-output table>tfoot>tr.danger>th {
+  background-color: #ff4136
+}
+
+.md-output table a:not(.btn) {
+  text-decoration: underline
+}
+
+.md-output table .dropdown-menu a {
+  text-decoration: none
+}
+
+.md-output table .success,
+.md-output table .warning,
+.md-output table .danger,
+.md-output table .info {
+  color: #fff
+}
+
+.md-output table .success a:not(.btn),
+.md-output table .warning a:not(.btn),
+.md-output table .danger a:not(.btn),
+.md-output table .info a:not(.btn) {
+  color: #fff
+}
