@@ -35,6 +35,7 @@
       align-content: stretch;
       align-items: stretch;
       flex: 1;
+      overflow: hidden;
     }
 
     .md-input,
@@ -114,7 +115,7 @@
     <div class="md-output" id="output"></div>
   </main>
 
-    <script src="/assets/js/editrrr.min.js"></script>
+  <script src="/assets/js/editrrr.umd.js"></script>
   <script>
     (function(window, document, undefined) {
       var isMac = /(Mac)/gi.test(navigator.platform);
@@ -139,10 +140,8 @@
         duplicateLine: true,
       });
 
-
-
-      editor.addEvent('keydown', updateMarkdown);
-      editor.addEvent('keydown', syncScroll);
+      editor.addEvent('keyup', updateMarkdown);
+      editor.addEvent('keyup', syncScroll);
       editor.addEvent('input', updateMarkdown);
       editor.addEvent('input', syncScroll);
       editor.addEvent('scroll', syncScroll);
